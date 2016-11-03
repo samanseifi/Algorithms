@@ -28,10 +28,6 @@ WeightedQuickUnion::~WeightedQuickUnion() {
 	delete sz;
 }
 
-void WeightedQuickUnion::initilize(int N) {
-
-}
-
 int WeightedQuickUnion::root(int i) {
 	while (i != id[i])
 		i = id[i];

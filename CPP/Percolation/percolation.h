@@ -17,9 +17,14 @@ public:
 
 
 private:
+
+	// translate the coordinates (row, col) to index
+	int getIndex(int, int);		
+
 	bool** grid;	// 2-dimensional array is initilized for C++11
 	int top;
 	int bottom;
+	int size;
 
 	WeightedQuickUnion* qf;
 			

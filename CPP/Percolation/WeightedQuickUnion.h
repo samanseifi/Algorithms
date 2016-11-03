@@ -9,7 +9,6 @@ public:
 	WeightedQuickUnion(int);			// constructor
 	virtual ~WeightedQuickUnion();		// destructor
 
-	void initilize(int);
 	int root(int);
 	bool find(int, int);
 	void connect(int, int);
