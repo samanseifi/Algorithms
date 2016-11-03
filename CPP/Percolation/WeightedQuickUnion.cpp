@@ -1,29 +1,15 @@
+#include "WeightedQuickUnion.h"
 #include <iostream>
 using namespace std;
 
-
-class WeightedQuickUnion 
-{
-
-public:
-	WeightedQuickUnion(int);	// constructor
-	~WeightedQuickUnion();		// destructor
-
-	int root(int);
-	bool find(int, int);
-	void connect(int, int);
-
-private:
-	int* id;	// For constructing array it has to be initilized with reference
-	int* sz;	// For constructing array it has to be initilized with reference
-
-};
-
-int main()
-{
-	WeightedQuickUnion uf(10);
-
+/*int main() {
+	WeightedQuickUnion* qf;
+	qf->testing();
 	return 0;
+}*/
+WeightedQuickUnion::WeightedQuickUnion() {
+	id = 0;
+	sz = 0;
 }
 
 WeightedQuickUnion::WeightedQuickUnion(int N) {
@@ -40,6 +26,10 @@ WeightedQuickUnion::WeightedQuickUnion(int N) {
 WeightedQuickUnion::~WeightedQuickUnion() {
 	delete id;
 	delete sz;
+}
+
+void WeightedQuickUnion::initilize(int N) {
+
 }
 
 int WeightedQuickUnion::root(int i) {
@@ -67,4 +57,8 @@ void WeightedQuickUnion::connect(int p, int q) {
 		id[j] = i;
 		sz[i] += sz[j];
 	}
+}
+
+void WeightedQuickUnion::testing() {
+	cout << "testing is ok!" << endl;
 }
