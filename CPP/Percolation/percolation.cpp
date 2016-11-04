@@ -64,14 +64,19 @@ bool percolation::isOpen(int row, int col) {
 }
 
 bool percolation::isFull(int row, int col) {
-
+	if ( row >= 0 && size >= row && col >= 0 && size >= col) {
+		return qf->find(top, getIndex(row, col));
+	} else {
+		cout << "Index out of bounds" << endl;
+		return 0;
+	}
 }
 
 /**
  * check if the grid percolates!
  **/
 bool percolation::percolates() {
-	return qf.find(top, bottom);
+	return qf->find(top, bottom);
 }
 
 /**
