@@ -1,12 +1,5 @@
 #include "WeightedQuickUnion.h"
-#include <iostream>
-using namespace std;
 
-/*int main() {
-	WeightedQuickUnion* qf;
-	qf->testing();
-	return 0;
-}*/
 WeightedQuickUnion::WeightedQuickUnion() {
 	id = 0;
 	sz = 0;
@@ -20,7 +13,6 @@ WeightedQuickUnion::WeightedQuickUnion(int N) {
 		id[i] = i;
 	for (int j = 0; j < N; j++)
 		sz[j] = 1;
-	cout << "Size of the array is = " << N << endl;
 }
 
 WeightedQuickUnion::~WeightedQuickUnion() {
@@ -53,8 +45,4 @@ void WeightedQuickUnion::connect(int p, int q) {
 		id[j] = i;
 		sz[i] += sz[j];
 	}
-}
-
-void WeightedQuickUnion::testing() {
-	cout << "testing is ok!" << endl;
 }

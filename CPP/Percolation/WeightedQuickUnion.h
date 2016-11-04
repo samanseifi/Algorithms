@@ -12,7 +12,6 @@ public:
 	int root(int);
 	bool find(int, int);
 	void connect(int, int);
-	void testing();
 
 private:
 	int* id;	// For constructing array it has to be initilized with reference
