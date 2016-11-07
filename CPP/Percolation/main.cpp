@@ -4,7 +4,7 @@
  * T = 100
  */
 
-#include "Percolation.h"
+#include "percolation.h"
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
