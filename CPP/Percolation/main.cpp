@@ -4,7 +4,7 @@
  * T = 100
  */
 
-#include "percolation.h"
+#include "Percolation.h"
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -16,17 +16,17 @@ int main(int argc, char* argv[])
 {
 	int n = atoi(argv[1]);	// size of the grid (n-by-n)
 	int T = atoi(argv[2]);	// number of experiments
-	
-	float mean = 0.0;	
+
+	float mean = 0.0;
 	float expNum[10000];
 	float std = 0.0;
 
 	srand (time(NULL));
-	
-	// doing experiment T times! 
+
+	// doing experiment T times!
 	for (int i = 0; i < T; i++) {
-		int numOpenUnits = 0;	
-		percolation pr(n);		
+		int numOpenUnits = 0;
+		percolation pr(n);
 		while (pr.percolates() != true) {
 			int randomOpenIndex = rand() % (n*n);
 			int row = (randomOpenIndex / n);
@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 			if (!pr.isOpen(row, col)) {
 				pr.open(row, col);
 				numOpenUnits = numOpenUnits + 1;
-			} 
+			}
 		}
 		expNum[i] = numOpenUnits/float(n*n);
 		mean = mean + expNum[i];
