@@ -8,7 +8,7 @@ using namespace arma;
 class Mesh {
 
 public:
-	Mesh(int, int, float, float);
+	Mesh(int, int, double, double);
 	virtual ~Mesh();
 	int num_nodes();
 	int num_elements();

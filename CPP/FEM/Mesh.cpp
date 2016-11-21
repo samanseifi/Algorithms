@@ -7,6 +7,7 @@ using namespace std;
 using namespace arma;
 
 
+
 Mesh::~Mesh() { }
 
 /*
@@ -14,7 +15,7 @@ Mesh::~Mesh() { }
 *
 ** (Note: Initilizing Armadillo's matrices should be done directly) 
 */
-Mesh::Mesh(int ex, int ey, float lx, float ly): 
+Mesh::Mesh(int ex, int ey, double lx, double ly): 
 				nodes_set((ex + 1)*(ey + 1), 2, fill::zeros),
 				conns_set(ex*ey, 4, fill::zeros) {
 

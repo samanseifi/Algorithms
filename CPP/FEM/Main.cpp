@@ -1,24 +1,42 @@
+
+/* 
+** This is a simple finite element code for linear elastic material.
+**
+** 		Young's modulus: E
+**		Poisson Ratio:   nu
+**
+** Implemented: uniform mesh, shape functions
+** Not implemented: stiffness matrix, force matrix, bc, solver
+*/
+
+/* Currently makefile is problematic for matrix multiplication with Armadillo! 
+** For time being compile it with:
+**
+** g++ -std=c++11 -larmadillo Main.cpp Mesh.cpp -o fem1
+**
+** Happy Coding!
+*/
+
+#include "mesh.h"
+
 #include <iostream>
-#include <armadillo>
 #include <cmath>
 
-#include "Mesh.h"
-
 using namespace std;
-using namespace std;
+using namespace arma;
 
 vec shape(vec);
-vec gradshape(vec);
+mat gradshape(vec);
 
-int main() {
+int main(int argc, char *argv[]) {
 
 	// Create a uniform mesh
 	Mesh mesh(4, 2 ,4 ,2);
 
 
 	// Plane-strain material tangent
-	const float E = 100.0;
-	const float nu = 0.29;
+	double E = 100.0;
+	double nu = 0.29;
 
 	mat D(3, 3, fill::zeros);
 	D(0, 0) = D(1, 1) = 1.0 - nu; 
@@ -37,7 +55,7 @@ int main() {
 
 	// initilizing the B matrix
 	mat B(3, 8, fill::zeros); 
-
+	mat VV = B*B.t();
 	// loop over elements
 	for (int i = 0; i < mesh.num_elements(); i++) {
 		mat xIe(4, 2, fill::zeros);
@@ -49,16 +67,21 @@ int main() {
 			xIe.row(j) = mesh.nodes_set.row(val);
 			j++;
 		}
+		// T = trans(xIe);
+		//vec T = (xIe.row(0));
+
+		//cout << xIe << endl;
 
 		// initializing the stiffness matrix of current element
 		mat Ke(8, 8, fill::zeros);
+		mat dN(2, 4, fill::zeros);
 		for (int i = 0; i < q4.n_rows; i++) {
 			vec q = trans(q4.row(i));  // has to be transposed!!
-			vec dN = gradshape(q);
-
+			dN = gradshape(q);
+			
 		}
-	}
-	
+		cout << dN << "*" << xIe << "=" << dN*xIe << endl;
+	}	
 	return 0;
 }
 
@@ -67,8 +90,8 @@ int main() {
 ** Shape function for a 4-node, isoparametric element!
 */
 vec shape(vec xi) {
-	float x = xi(0);
-	float y = xi(1);
+	double x = xi(0);
+	double y = xi(1);
 
 	// C++11
 	vec N = {{(1.0 - x)*(1.0 - y), (1.0+x)*(1.0-y), (1.0+x)*(1.0+y), (1.0-x)*(1.0+y)}};
@@ -80,13 +103,13 @@ vec shape(vec xi) {
 /*
 **	Gradient of the shape function for a 4-node, isoparametric element!
 */
-vec gradshape(vec xi) {
-	float x = xi(0);
-	float y = xi(1);
+mat gradshape(vec xi) {
+	double x = xi(0);
+	double y = xi(1);
 
 	// C++11
-	vec dN = {	{-(1.0 - y),  (1.0 - y), (1.0 + y), -(1.0 + y),
-				 -(1.0 - x), -(1.0 + x), (1.0 + x),  (1.0 - x)}	}; 
+	mat dN = {	{-(1.0 - y),  (1.0 - y), (1.0 + y), -(1.0 + y)},
+				{-(1.0 - x), -(1.0 + x), (1.0 + x),  (1.0 - x)}	}; 
 	dN *= 0.25;
 
 	return dN;
