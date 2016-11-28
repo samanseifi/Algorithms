@@ -17,7 +17,7 @@
 ** Happy Coding!
 */
 
-#include "mesh.h"
+#include "Mesh.h"
 
 #include <iostream>
 #include <cmath>
@@ -32,8 +32,9 @@ int main(int argc, char *argv[]) {
 
 	// Create a uniform mesh
 	Mesh mesh(4, 2 ,4 ,2);
-
-
+	
+	
+	
 	// Plane-strain material tangent
 	double E = 100.0;
 	double nu = 0.29;
@@ -78,10 +79,10 @@ int main(int argc, char *argv[]) {
 		for (int i = 0; i < q4.n_rows; i++) {
 			vec q = trans(q4.row(i));  // has to be transposed!!
 			dN = gradshape(q);
-			
+
 		}
 		cout << dN << "*" << xIe << "=" << dN*xIe << endl;
-	}	
+	}
 	return 0;
 }
 
@@ -98,7 +99,7 @@ vec shape(vec xi) {
 	N *= 0.25;
 
 	return N;
-}	
+}
 
 /*
 **	Gradient of the shape function for a 4-node, isoparametric element!
