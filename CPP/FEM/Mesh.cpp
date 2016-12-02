@@ -6,64 +6,57 @@
 using namespace std;
 using namespace arma;
 
-
-
-Mesh::~Mesh() { }
+Mesh::~Mesh() {}
 
 /*
 ** Generating a uniform mesh
 *
-** (Note: Initilizing Armadillo's matrices should be done directly) 
+** (Note: Initilizing Armadillo's matrices should be done directly)
 */
-Mesh::Mesh(int ex, int ey, double lx, double ly): 
-				nodes_set((ex + 1)*(ey + 1), 2, fill::zeros),
-				conns_set(ex*ey, 4, fill::zeros) {
+Mesh::Mesh(int ex, int ey, double lx, double ly)
+    : nodes_set((ex + 1) * (ey + 1), 2, fill::zeros),
+      conns_set(ex * ey, 4, fill::zeros) {
 
-	cout << "Constructing Mesh..." << endl;
+  cout << "Constructing Mesh..." << endl;
 
-	nx = ex + 1;	// number of nodes in x
-	ny = ey + 1;	// number of nodes in y
+  nx = ex + 1; // number of nodes in x
+  ny = ey + 1; // number of nodes in y
 
-	// Discretizing the lengths lx and ly
-	vec x = linspace<vec> (0, lx, nx);
-	vec y = linspace<vec> (0, ly, ny);
-	
-	// Creating the nodes set (Note: cartesian coordinates (x, y) is the flipped of matrix (i,j))
-	for (int j = 0; j < ny; j++) { 
-		for (int i = 0; i < nx; i++) {
-			nodes_set(i + j*nx, 0) = y(j);
-			nodes_set(i + j*nx, 1) = x(i);
-		}
-	}
+  // Discretizing the lengths lx and ly
+  vec x = linspace<vec>(0, lx, nx);
+  vec y = linspace<vec>(0, ly, ny);
 
-	// Creating the connectivity matrix
-	for (int j = 0; j < ey; j++) {
-		for (int i = 0; i < ex; i++) {
-			vec ele_conn(4, fill::zeros);
+  // Creating the nodes set
+  for (int j = 0; j < ny; j++) {
+    for (int i = 0; i < nx; i++) {
+      nodes_set(i + j * nx, 0) = x(i);
+      nodes_set(i + j * nx, 1) = y(j);
+    }
+  }
 
-			// Numbering the nodes of the element i-th
-			ele_conn(0) = i + j*nx;				// NORTH WEST
-			ele_conn(1) = i + j*nx + 1;			// NORTH EAST	 
-			ele_conn(2) = i + j*nx + 1 + nx;	// SOUTH EAST
-			ele_conn(3) = i + j*nx + nx;		// SOUTH WEST
+  // Creating the connectivity matrix
+  for (int j = 0; j < ey; j++) {
+    for (int i = 0; i < ex; i++) {
+      vec ele_conn(4, fill::zeros);
 
-			// Store to the global connectivity matrix
-			conns_set.row(i + j*ex) = floor(trans(ele_conn));
-		}
-	}
+      // Numbering the nodes of the element i-th
+      ele_conn(0) = i + j * nx;          // NORTH WEST
+      ele_conn(1) = i + j * nx + 1;      // NORTH EAST
+      ele_conn(2) = i + j * nx + 1 + nx; // SOUTH EAST
+      ele_conn(3) = i + j * nx + nx;     // SOUTH WEST
 
+      // Store to the global connectivity matrix
+      conns_set.row(i + j * ex) = floor(trans(ele_conn));
+    }
+  }
 }
 
 /*
 ** Return the number of nodes
 */
-int Mesh::num_nodes() {
-	return nx*ny;
-}
+int Mesh::num_nodes() { return nx * ny; }
 
 /*
 ** Return the number of elements
 */
-int Mesh::num_elements() {
-	return ((nx*ny) / 2 ) + 1;
-}
+int Mesh::num_elements() { return ((nx * ny) / 2) + 1; }
