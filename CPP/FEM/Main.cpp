@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 
   // Plane-strain material tangent
   double E = 100.0;
-  double nu = 0.29;
+  double nu = 0.3;
 
   Mat<double> D(3, 3, fill::zeros);
   D(0, 0) = D(1, 1) = 1.0 - nu;
@@ -54,23 +54,22 @@ int main(int argc, char *argv[]) {
 
   // initilizing the B matrix
   Mat<double> B(3, 8, fill::zeros);
-  Mat<double> Ke(8, 8, fill::zeros);
-  // Mat<double> VV = B*B.t();
 
   // loop over elements constructing global stiffness matrix K
   for (int i = 0; i < mesh.num_elements(); i++) {
     Mat<double> xIe(4, 2, fill::zeros);
-    Mat<double> curr_elem = mesh.conns_set.row(i);
-    int j = 0;
+    Mat<double> curr_elem = mesh.conns_set.row(i); // problematic with vector
 
     // loop over current element nodes number (Implementation: C++11)
+    // storing coordinates in a 4x2 matrix: xIe
+    int j = 0;
     for (const auto &val : curr_elem) {
       xIe.row(j) = mesh.nodes_set.row(val);
       j++;
     }
 
     // initializing the stiffness matrix of current element
-
+    Mat<double> Ke(8, 8, fill::zeros);
     Mat<double> dN(2, 4, fill::zeros);
     for (int i = 0; i < int(q4.n_rows); i++) {
       vec q = trans(q4.row(i)); // has to be transposed!!
@@ -99,9 +98,22 @@ int main(int argc, char *argv[]) {
 
       Ke += det(J) * ((B.t() * D) * B);
     }
-    cout << Ke << endl;
+    //    cout << Ke << endl;
+    // Now scatter the Ke into K!
+    int k = 0;
+    for (const auto &val1 : curr_elem) {
+      int j = 0;
+      for (const auto &val2 : curr_elem) {
+        K(2 * val1, 2 * val2) += Ke(2 * k, 2 * j);
+        K(2 * val1 + 1, 2 * val2) += Ke(2 * k + 1, 2 * j);
+        K(2 * val1 + 1, 2 * val2 + 1) += Ke(2 * k + 1, 2 * j + 1);
+        K(2 * val1, 2 * val2 + 1) += Ke(2 * k, 2 * j + 1);
+        j++;
+      }
+      k++;
+    }
   }
-
+  cout << K << endl;
   return 0;
 }
 
