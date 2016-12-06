@@ -22,6 +22,8 @@
 #include <cmath>
 #include <iostream>
 
+#define pi 3.14159265358979323846
+
 using namespace std;
 using namespace arma;
 
@@ -113,7 +115,25 @@ int main(int argc, char *argv[]) {
       k++;
     }
   }
-  cout << K << endl;
+  vec f(2 * mesh.num_nodes(), fill::zeros);
+  for (int i = 0; i < mesh.num_nodes(); i++) {
+    if (mesh.nodes_set(i, 1) == 0.0) {
+      K.row(2 * i) = zeros<mat>(1, K.n_cols);
+      K.row(2 * i + 1) = zeros<mat>(1, K.n_cols);
+      K(2 * i, 2 * i) = 1.0;
+      K(2 * i + 1, 2 * i + 1) = 1.0;
+    }
+    if (mesh.nodes_set(i, 1) == mesh.l_y) {
+      double x = mesh.nodes_set(i, 0);
+      double fbar = mesh.h_x * (cos(8.0 * pi * x / mesh.l_x));
+      fbar *= (x * (mesh.l_x - x)) / ((mesh.l_x) * (mesh.l_x));
+      f(2 * i + 1) = fbar;
+      if (x == 0.0 || x == mesh.l_x)
+        f(2 * i + 1) *= 0.5;
+    }
+  }
+  cout << "Solving linear system ..." << endl;
+  mat U = solve(K, f);
   return 0;
 }
 

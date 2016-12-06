@@ -17,6 +17,12 @@ Mesh::Mesh(int ex, int ey, double lx, double ly)
     : nodes_set((ex + 1) * (ey + 1), 2, fill::zeros),
       conns_set(ex * ey, 4, fill::zeros) {
 
+  l_x = lx;
+  l_y = ly;
+
+  h_x = lx / ex;
+  h_y = ly / ey;
+
   cout << "Constructing Mesh..." << endl;
 
   nx = ex + 1; // number of nodes in x
