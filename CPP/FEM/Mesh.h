@@ -13,11 +13,11 @@ public:
   int num_nodes();
   int num_elements();
 
-  mat nodes_set;
-  mat conns_set;
+  mat nodes_set; // set of nodes coordinates
+  mat conns_set; // set of connectivities by node numbers
 
-  double l_x, l_y;
-  double h_x, h_y;
+  double lx, ly; // length in x and y direction
+  double hx, hy; // x and y spacings
 
 private:
   int nx;

@@ -13,15 +13,10 @@ Mesh::~Mesh() {}
 *
 ** (Note: Initilizing Armadillo's matrices should be done directly)
 */
-Mesh::Mesh(int ex, int ey, double lx, double ly)
-    : nodes_set((ex + 1) * (ey + 1), 2, fill::zeros),
+Mesh::Mesh(int ex, int ey, double l_x, double l_y)
+    : lx(l_x), ly(l_y), hx(l_x / ex), hy(l_y / ey),
+      nodes_set((ex + 1) * (ey + 1), 2, fill::zeros),
       conns_set(ex * ey, 4, fill::zeros) {
-
-  l_x = lx;
-  l_y = ly;
-
-  h_x = lx / ex;
-  h_y = ly / ey;
 
   cout << "Constructing Mesh..." << endl;
 
@@ -32,7 +27,7 @@ Mesh::Mesh(int ex, int ey, double lx, double ly)
   vec x = linspace<vec>(0, lx, nx);
   vec y = linspace<vec>(0, ly, ny);
 
-  // Creating the nodes set
+  // Creating the nodes set coordinates (x,y)
   for (int j = 0; j < ny; j++) {
     for (int i = 0; i < nx; i++) {
       nodes_set(i + j * nx, 0) = x(i);
