@@ -19,6 +19,8 @@
 #include <cmath>
 #include <iostream>
 
+#include <fstream>
+
 #define pi 3.14159265358979323846
 
 using namespace std;
@@ -31,7 +33,7 @@ mat set_B(mat);
 int main(int argc, char *argv[]) {
 
   // Create a uniform mesh
-  Mesh mesh(4, 2, 4, 2);
+  Mesh mesh(20, 20, 2, 2);
 
   // Plane-strain material tangent
   double E = 100.0;
@@ -61,6 +63,11 @@ int main(int argc, char *argv[]) {
   }
   cout << "Solving linear system ..." << endl;
   mat U = solve(K, f);
-  cout << U << endl;
+
+  ofstream file1;
+  file1.open("u.dat");
+  file1 << U << endl;
+  file1.close();
+
   return 0;
 }

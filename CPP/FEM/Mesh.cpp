@@ -60,4 +60,4 @@ int Mesh::num_nodes() { return nx * ny; }
 /*
 ** Return the number of elements
 */
-int Mesh::num_elements() { return ((nx * ny) / 2) + 1; }
+int Mesh::num_elements() { return (nx - 1) * (ny - 1); }
