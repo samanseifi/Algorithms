@@ -9,7 +9,7 @@
 /* Currently makefile is problematic for matrix multiplication with Armadillo!
 ** For time being compile it with:
 **
-** g++ Main.cpp Mesh.cpp -o fem1 -std=c++11 -larmadillo
+** g++ Main.cpp Mesh.cpp SolidElement.cpp -o fem1 -std=c++11 -larmadillo
 **
 */
 
@@ -65,9 +65,16 @@ int main(int argc, char *argv[]) {
   mat U = solve(K, f);
 
   ofstream file1;
+  ofstream file2;
+
   file1.open("u.dat");
   file1 << U << endl;
   file1.close();
+
+  file2.open("mesh_info.dat");
+  file2 << mesh.lx << " " << mesh.ly << " " << mesh.lx / mesh.hx + 1 << " "
+        << mesh.ly / mesh.hy + 1 << endl;
+  file2.close();
 
   return 0;
 }

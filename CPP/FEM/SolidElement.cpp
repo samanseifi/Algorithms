@@ -40,7 +40,7 @@ SolidElement::SolidElement(Mesh mesh, double E, double nu)
       xIe.row(j) = mesh.nodes_set.row(val);
       j++;
     }
-    cout << xIe << endl;
+
     // initializing the stiffness matrix of current element
     Mat<double> Ke(8, 8, fill::zeros);
     Mat<double> dN(2, 4, fill::zeros);
