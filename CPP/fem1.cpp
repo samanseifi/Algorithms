@@ -5,8 +5,10 @@
 
 Eigen::MatrixXd FormStiffness(int);
 Eigen::VectorXd FormRHS(int);
-double Integrate_hat1(double, double, double);
-double Integrate_hat2(double, double, double);
+double Integrate_hat1(double, double);
+double Integrate_hat2(double, double);
+double psi1(double, double, double);
+double psi2(double, double, double);
 double f(double);
 
 
@@ -45,10 +47,8 @@ Eigen::VectorXd FormRHS(int m) {
 	b(m - 1) = 0.0; // Account for BC end
 
 	for (int j = 1; j < m - 1; j++) {
-		b(j) = Integrate_hat1(x[j - 1], x[j], h) + Integrate_hat2(x[j], x[j + 1], h);
+		b(j) = Integrate_hat1(x[j - 1], x[j]) + Integrate_hat2(x[j], x[j + 1]);
 	}
-	
-	std::cout << b << std::endl;	
 
 	return b;
 }
@@ -70,29 +70,41 @@ Eigen::MatrixXd FormStiffness(int m) {
 	K(0, 0) 	= 1.0; // Account for BC start
 	K(m - 1, m - 1) = 1.0; // Account for BC end
 	
-	std::cout << K << std::endl;
 	K *= 1.0/h;
 
 	return K;
 }
 
-double Integrate_hat1(double a, double b, double h) {
+double Integrate_hat1(double a, double b) {
 	
 	double c = (a + b)/2.0;                                                                                                    
 
-	return ((b - a)/6.0)*(f(a)*((a - a)/h) + 4*f(c)*((c - a)/h) + f(b)*((b - a)/h));	
+	return ((b - a)/6.0)*(f(a)*psi1(a, a, b) + 4*f(c)*psi1(c, a, b) + f(b)*psi1(b, a, b));	
 }
 
-double Integrate_hat2(double a, double b, double h) {
+double Integrate_hat2(double a, double b) {
 	
 	double c = (a + b)/2.0;
 
-	return ((b - a)/6.0)*(f(a)*((b - a)/h) + 4*f(c)*((b - c)/h) + f(b)*((b - b)/h));
+	return ((b - a)/6.0)*(f(a)*psi2(a, a, b) + 4*f(c)*psi2(c, a, b) + f(b)*psi2(b, a, b));
 }
+
+double psi1(double x, double a, double b) {
+	
+	double h = b - a;
+	return (x - a)/h;
+}
+
+double psi2(double x, double a, double b) {
+	
+	double h = b - a;
+	return (b - x)/h;
+}
+
 
 double f(double x) {
 
-	return 1;
+	return x*x - 2*x;
 
 }
 
